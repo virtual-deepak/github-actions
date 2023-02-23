@@ -1,0 +1,58 @@
+name: Usage of expressions, conditions and function
+on: 
+  workflow_dispatch:
+    inputs:
+      failstep:
+        description: 'Fail step in Job 1 (yes/no)'
+        required: true
+        default: 'no'
+jobs:
+  first-job:
+    name: This is the first job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code if running on the main branch
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/checkout@v2
+
+      - name: Passing Yes to fail first-job
+        if: github.events.input.failstep == 'yes'
+        run: echo "Value passed in was Yes to fail the first-job"
+      
+      - name: Passing No to not fail the first-job
+        run: echo "Value passed in was No to not fail the first-job"
+        if: github.events.input.failstep == 'no' # sequence of if and run doesn't matter
+      
+      - name: Step which needs to fail
+        env:
+          FAIL_STEP: ${{ github.events.input.failstep == 'yes' }}
+        run: |
+          if [[ $FAIL_STEP == true ]]
+          then
+            exit 1
+          fi
+
+      - name: Another step in the workflow
+        run: echo "This is just another step in the workflow"
+
+      - name: Run only in case of previous failure
+        if: failure()
+        run: "Runs only in case of previous failure"
+
+      - name: Run only in case of previous success
+        if: success()
+        run: echo "Runs only in case of previous success"
+      
+      - name: Run always irrespective of previous success or failure
+        if: always()
+        run: echo "Runs always irrespective of previous success or failure"
+  second-job:
+    runs-on: ubuntu-latest
+    needs: first-job
+    steps:
+      - name: "Second job in the workflow"
+        run: echo "Second job in the workflow"
+      
+      
+
+  
