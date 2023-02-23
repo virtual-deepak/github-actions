@@ -16,16 +16,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Passing Yes to fail first-job
-        if: github.events.input.failstep == 'yes'
+        if: github.event.inputs.failstep == 'yes'
         run: echo "Value passed in was Yes to fail the first-job"
       
       - name: Passing No to not fail the first-job
         run: echo "Value passed in was No to not fail the first-job"
-        if: github.events.input.failstep == 'no' # sequence of if and run doesn't matter
+        if: github.event.inputs.failstep == 'no' # sequence of if and run doesn't matter
       
       - name: Step which needs to fail
         env:
-          FAIL_STEP: ${{ github.events.input.failstep == 'yes' }}
+          FAIL_STEP: ${{ github.event.inputs.failstep == 'yes' }}
         run: |
           if [[ $FAIL_STEP == true ]]
           then
