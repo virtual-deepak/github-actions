@@ -29,6 +29,9 @@ jobs:
         working-directory: ./sample-mvc-app
         run: dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
       
+      - name: Published artifacts at
+        run: echo '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+      
       - name: Deploying to Azure
         uses: azure/webapps-deploy@v2.2.6
         with:
