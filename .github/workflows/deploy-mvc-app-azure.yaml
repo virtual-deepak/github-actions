@@ -1,5 +1,5 @@
 name: Deploy MVC App to Azure
-on: push
+on: pull_request
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'
