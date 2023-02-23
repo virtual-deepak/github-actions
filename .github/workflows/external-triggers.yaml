@@ -1,0 +1,11 @@
+name: Gitub Action with External Trigger
+on:
+  repository_dispatch:
+    type: dee_event_type
+jobs:
+  dee_event_type:
+    name: External event job
+    runs-on: ubuntu-latest
+    steps:
+      - name:  Read the client payload
+        run: echo "Received client payload ${{ github.event.client_payload.some_data }}"
