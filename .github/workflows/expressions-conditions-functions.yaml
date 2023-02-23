@@ -37,7 +37,7 @@ jobs:
 
       - name: Run only in case of previous failure
         if: failure()
-        run: "Runs only in case of previous failure"
+        run: echo "Runs only in case of previous failure"
 
       - name: Run only in case of previous success
         if: success()
