@@ -1,7 +1,7 @@
 name: Gitub Action with External Trigger
 on:
   repository_dispatch:
-    type: dee_event_type
+    types: dee_event_type
 jobs:
   dee_event_type:
     name: External event job
