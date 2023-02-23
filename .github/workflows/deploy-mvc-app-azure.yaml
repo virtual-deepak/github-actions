@@ -1,0 +1,36 @@
+name: Deploy MVC App to Azure
+on: push
+
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  AZURE_WEBAPP_NAME: deetestgithubcicd
+
+jobs:
+  Build-Code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Setup .Net
+        uses: setup-dotnet@v2
+        with:
+          dotnet-version: 6.0
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+      
+      - name: Publish
+        run: dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+      
+      - name: Deploying to Azure
+        uses: azure/webapps-deploy@v2.2.6
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: $ {{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+
+
+      
