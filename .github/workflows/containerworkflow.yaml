@@ -1,0 +1,39 @@
+name: Container Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      image-name:
+        description: 'Enter image name'
+        required: true
+      acr-server:
+        description: 'Enter ACR server name'
+        required: true
+      client-id:
+        description: 'Enter Service Principal Client Id'
+        required: true
+      client-secret:
+        description: 'Enter Service Principal Client Secret'
+        required: true
+defaults:
+  run:
+    working-directory: ./sample-mvc-docker-app
+jobs:
+  build-image:
+    env:
+      server-image-path: ${{ format('{0}/{1}', github.action.events.input.acr-server, github.action.events.input.image-name) }} 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.server-image-path }}
+          username: ${{ github.action.events.input.client-id }}
+          password: ${{ github.action.events.input.client-secret }}
+      - name: Build image
+        run: docker build . -t ${{ github.action.events.input.image-name }}
+      - name: Tag Image
+        run: docker tag ${{ github.action.events.input.image-name }} ${{ env.server-image-path }}
+      - name: Push image
+        run: docker push ${{ env.server-image-path }}
