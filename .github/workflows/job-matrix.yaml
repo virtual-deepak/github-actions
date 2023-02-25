@@ -11,7 +11,9 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
-
+      - name: Environment details
+        uses: echo "This is running on ${{ matrix.os }} with dotnet version ${{ matrix.dotnet-version }}"
+        
       - name: Setup .Net
         uses: actions/setup-dotnet@v1
         with:
