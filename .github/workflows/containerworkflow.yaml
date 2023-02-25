@@ -20,7 +20,7 @@ defaults:
 jobs:
   build-image:
     env:
-      server-image-path: ${{ format('{0}/{1}', github.action.events.input.acr-server, github.action.events.input.image-name) }} 
+      server-image-path: ${{ format('{0}/{1}', github.event.inputs.acr-server, github.event.inputs.image-name) }} 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,11 +29,11 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.server-image-path }}
-          username: ${{ github.action.events.input.client-id }}
-          password: ${{ github.action.events.input.client-secret }}
+          username: ${{ github.event.inputs.client-id }}
+          password: ${{ github.event.inputs.client-secret }}
       - name: Build image
-        run: docker build . -t ${{ github.action.events.input.image-name }}
+        run: docker build . -t ${{ github.event.inputs.image-name }}
       - name: Tag Image
-        run: docker tag ${{ github.action.events.input.image-name }} ${{ env.server-image-path }}
+        run: docker tag ${{ github.event.inputs.image-name }} ${{ env.server-image-path }}
       - name: Push image
         run: docker push ${{ env.server-image-path }}
