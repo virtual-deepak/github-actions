@@ -25,13 +25,10 @@ jobs:
       - name: List files in GitHub workspace
         run: ls ${{ github.workspace }}
       - name: Check Docker file existence
-        id: check-docker-file
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "sample-mvc-docker-app/Dockerfile"
-      - name: File exists
-        if: steps.check-docker-file.outputs.files_exists != 'true'
-        run: exit 1
+        run: |
+          if: ! [ -e sample-mvc-docker-app/Dockerfile ]; then
+            exit 1
+          fi
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
