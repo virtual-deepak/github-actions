@@ -1,6 +1,5 @@
 name: Matrix Testing for Jobs
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 jobs:
   Build-Code:
     runs-on: ${{ matrix.os }}

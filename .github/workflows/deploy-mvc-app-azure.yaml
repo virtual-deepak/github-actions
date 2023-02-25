@@ -1,5 +1,5 @@
 name: Deploy MVC App to Azure
-on: pull_request
+on: workflow_dispatch
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'
