@@ -23,10 +23,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: List files in GitHub workspace
-        run: ls ${{ github.workspace }}
+        run: ls -R ${{ github.workspace }}
       - name: Check Docker file existence
         run: |
-          if ! [ -e /sample-mvc-docker-app/Dockerfile ]
+          if ! [ -e ./sample-mvc-docker-app/Dockerfile ]
           then
             exit 1
           fi
@@ -37,7 +37,7 @@ jobs:
           username: ${{ github.event.inputs.client-id }}
           password: ${{ github.event.inputs.client-secret }}
       - name: Build image
-        run: docker build /sample-mvc-docker-app -t ${{ github.event.inputs.image-name }}
+        run: docker build ./sample-mvc-docker-app -t ${{ github.event.inputs.image-name }}
       - name: Tag Image
         run: docker tag ${{ github.event.inputs.image-name }} ${{ env.server-image-path }}
       - name: Push image
