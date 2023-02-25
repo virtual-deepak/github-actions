@@ -20,6 +20,14 @@ jobs:
       server-image-path: ${{ format('{0}/{1}', github.event.inputs.acr-server, github.event.inputs.image-name) }} 
     runs-on: ubuntu-latest
     steps:
+      - name: Check Docker file existence
+        id: check-docker-file
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "sample-mvc-docker-app/Dockerfile"
+      - name: File exists
+        if: steps.check-docker-file.outputs.files_exists == 'true'
+        run: echo "Docker file exists!"
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Login to ACR
