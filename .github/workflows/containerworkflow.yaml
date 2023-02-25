@@ -14,9 +14,6 @@ on:
       client-secret:
         description: 'Enter Service Principal Client Secret'
         required: true
-defaults:
-  run:
-    working-directory: ./sample-mvc-docker-app
 jobs:
   build-image:
     env:
@@ -32,7 +29,7 @@ jobs:
           username: ${{ github.event.inputs.client-id }}
           password: ${{ github.event.inputs.client-secret }}
       - name: Build image
-        run: docker build . -t ${{ github.event.inputs.image-name }}
+        run: docker build ./sample-mvc-docker-app -t ${{ github.event.inputs.image-name }}
       - name: Tag Image
         run: docker tag ${{ github.event.inputs.image-name }} ${{ env.server-image-path }}
       - name: Push image
