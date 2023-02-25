@@ -26,7 +26,8 @@ jobs:
         run: ls ${{ github.workspace }}
       - name: Check Docker file existence
         run: |
-          if: ! [ -e sample-mvc-docker-app/Dockerfile ]; then
+          if: ! [ -e sample-mvc-docker-app/Dockerfile ]
+          then
             exit 1
           fi
       - name: Login to ACR
