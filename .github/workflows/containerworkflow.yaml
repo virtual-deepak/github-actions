@@ -14,10 +14,11 @@ on:
       client-secret:
         description: 'Enter Service Principal Client Secret'
         required: true
+
+env:
+  server-image-path: ${{ format('{0}/{1}', github.event.inputs.acr-server, github.event.inputs.image-name) }} 
 jobs:
-  build-image:
-    env:
-      server-image-path: ${{ format('{0}/{1}', github.event.inputs.acr-server, github.event.inputs.image-name) }} 
+  build-push-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -42,3 +43,39 @@ jobs:
         run: docker tag ${{ github.event.inputs.image-name }} ${{ env.server-image-path }}
       - name: Push image
         run: docker push ${{ env.server-image-path }}
+  deploy-to-K8s:
+    runs-on: ubuntu-latest
+    needs: build-push-image
+    #env:
+        #NAMESPACE: dummy # If using K8s namespaces
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set the AKS context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          resource-group: '${{ secrets.AZURE_RESOURCE_GROUP }}'
+          cluster-name: '${{ secrets.AKS_NAME }}'
+          id: login
+      # Create namespace if doesn't exist
+      # - run: |
+      #    kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
+      - name: Set Image Pull Secret
+        uses: azure/k8s-create-secret@v4
+        with:
+          # namespace: ''
+          secret-name: '${{ secrets.AKS_IMAGE_PULL_SECRET }}'
+          container-registry-url: '${{ github.event.inputs.acr-server }}'
+          container-registry-username: ${{ github.event.inputs.client-id }}
+          container-registry-password: ${{ github.event.inputs.client-secret }}
+        id: create-secret
+      - name: Deploy to Kubernetes cluster
+        uses: Azure/k8s-deploy@v4.9
+        with:
+          manifests: |
+            ./sample-mvc-docker-app/manifests/deployment.yml
+            ./sample-mvc-docker-app/manifests/service.yml
+          images: ${{ env.server-image-path }}
+          imagepullsecrets: ${{ secrets.AKS_SECRET }}
+
