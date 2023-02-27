@@ -1,5 +1,8 @@
 name: Calculator Unit Test
 on: workflow_dispatch
+defaults:
+  run:
+    working-directory: ./calculator-app
 jobs:
   build:
     runs-on: ubuntu-latest
