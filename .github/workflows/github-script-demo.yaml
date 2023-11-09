@@ -12,8 +12,8 @@ jobs:
                     console.log(context);
 
                     github.rest.issues.create({
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
                         title: "This is comment #1",
                         body: "I created this using the github-script action!"
                     })
