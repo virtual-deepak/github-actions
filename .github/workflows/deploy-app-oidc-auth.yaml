@@ -1,0 +1,57 @@
+name: Deploy with OpenID Connect
+on: workflow_dispatch
+
+# Required for Azure OIDC based deployment (https://github.com/Azure/login)
+permissions:
+  id-token: write  # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  AZURE_WEBAPP_NAME: 'deetestgithubapp'
+
+defaults:
+  run:
+    working-directory: ./sample-mvc-app
+    
+jobs:
+  Build-Code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Setup .Net
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+      
+      - name: Publish
+        run: dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      
+      - name: Published artifacts at
+        run: echo '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      
+      - name: Az CLI login
+        uses: azure/login@v1
+        with:
+          client-id: 7ba20b2f-8d1a-49a0-90ae-8d0989655809
+          tenant-id: 6c972e39-63f9-48aa-875d-d471e9c2b97d
+          subscription-id: c78ec78d-be73-475e-aab4-edb8ae6d9921
+      - name: Publishing to Azure
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+      - name: Az Logout
+        run: az logout
+        
+
+
+      
