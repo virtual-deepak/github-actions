@@ -13,4 +13,4 @@ jobs:
     environment: Staging
     steps:
       - name: This is waiting to run based on approval
-        run: echo "Second workflow ran successfully ${{ env.MYVAR }}"
+        run: echo "Second workflow ran successfully ${{ vars.MYVAR }}"
