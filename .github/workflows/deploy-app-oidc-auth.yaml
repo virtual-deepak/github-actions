@@ -41,7 +41,7 @@ jobs:
       - name: Az CLI login
         uses: azure/login@v1
         with:
-          client-id: 7ba20b2f-8d1a-49a0-90ae-8d0989655809
+          client-id: b0496feb-0908-49be-b656-89a23cfbf8fc
           tenant-id: 6c972e39-63f9-48aa-875d-d471e9c2b97d
           subscription-id: c78ec78d-be73-475e-aab4-edb8ae6d9921
       - name: Publishing to Azure
