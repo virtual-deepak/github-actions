@@ -11,8 +11,6 @@ jobs:
   second-workflow:
     runs-on: ubuntu-latest
     environment: Staging
-    env:
-      myvar: 'My variable value from second workflow'
     steps:
       - name: This is waiting to run based on approval
         run: echo "Second workflow ran successfully ${{ env.myvar }}"
