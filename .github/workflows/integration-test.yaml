@@ -28,6 +28,9 @@ jobs:
             - name: Checkout the code
               uses: actions/checkout@v2
             
+            # With service containers, it is recommended to run the workload also in the docker container for easier networking
+            # Docker containers on the same user-defined bridge network expose all ports to each other, 
+                # so you don't need to map any of the service container ports to the Docker host.
             # - name: Setup .Net
               # uses: actions/setup-dotnet@v1
               # with:
