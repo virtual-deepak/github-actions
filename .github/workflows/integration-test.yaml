@@ -1,0 +1,42 @@
+name: Run Integration Tests with Database
+on:
+    workflow_dispatch: 
+
+jobs:
+    Tests:
+        runs-on: ubuntu-latest
+
+        env:
+            Database__IntegratedSecurity: "false"
+            Database__Server: "sqlserver"
+            Database__Port: "1433"
+            Database__UserId: "SA"
+            Database__Password: "P@ssword1$"
+        
+        # container: 
+            # image: mcr.microsoft.com/dotnet/sdk:5.0
+        
+        services:
+            sqlserver:
+                image: mcr.microsoft.com/mssql/server:2019-latest
+                env:
+                    SA_PASSWORD: ${{ env.Database__Password }}
+                    ACCEPT_EULA: Y
+                ports:
+                    - "1433:1433"
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v2
+            
+            - name: Setup .Net
+              uses: actions/setup-dotnet@v1
+              with:
+                dotnet-version: '7.0'
+
+            - name: Restore dependencies
+              run: |
+                dotnet restore
+                dotnet build --configuration 'release'
+                
+            - name: Run integration test
+              run: dotnet test --logger "console;verbosity=detailed"

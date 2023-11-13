@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/sample-mvc-docker-app/bin/Debug/net6.0/sample-mvc-docker-app.dll",
+            "program": "${workspaceFolder}/sample-integration-test/bin/Debug/net7.0/sample-integration-test.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/sample-mvc-docker-app",
+            "cwd": "${workspaceFolder}/sample-integration-test",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
